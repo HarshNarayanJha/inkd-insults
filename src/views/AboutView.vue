@@ -8,7 +8,7 @@
       width="148"
       height="148" />
     <h1
-      class="text-7xl font-display font-bold text-center bg-gradient-to-r from-stone-800 to-stone-500 dark:from-stone-50 dark:to-stone-400 bg-clip-text text-transparent drop-shadow-sm">
+      class="text-7xl font-display font-bold text-center text-stone-900 dark:text-stone-100 drop-shadow-sm">
       Ink'd Insults
     </h1>
     <p
