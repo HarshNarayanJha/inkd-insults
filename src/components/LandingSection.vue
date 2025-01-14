@@ -27,7 +27,9 @@ import { Icon } from '@iconify/vue'
           Try out an Example!
         </Button>
       </div>
-      <div class="mt-auto mb-32 text-3xl animate-pulse"><Icon icon="radix-icons:double-arrow-down" /></div>
+      <div class="mt-auto mb-32 text-3xl animate-pulse">
+        <Icon icon="radix-icons:double-arrow-down" />
+      </div>
     </div>
   </main>
 </template>

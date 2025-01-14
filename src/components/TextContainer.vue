@@ -1,10 +1,6 @@
 <template>
-  <div class="container">
-    <h2>Get Ready!</h2>
-    <p>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis eaque dolorum
-      repellendus, officia reiciendis consequuntur cupiditate quis quia itaque doloremque officiis
-      similique fugit quod totam deleniti nesciunt sapiente dolor quaerat?
-    </p>
+  <div class="p-8 m-4 border rounded-md">
+    <p class="font-semibold mb-8">2. Watch AI roast your handwriting</p>
+    <p class="text-justify"></p>
   </div>
 </template>
