@@ -1,18 +1,19 @@
 const animate = require("tailwindcss-animate")
+const defaultTheme = require('tailwindcss/defaultTheme')
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
   safelist: ["dark"],
   prefix: "",
-  
+
   content: [
     './pages/**/*.{ts,tsx,vue}',
     './components/**/*.{ts,tsx,vue}',
     './app/**/*.{ts,tsx,vue}',
     './src/**/*.{ts,tsx,vue}',
-	],
-  
+  ],
+
   theme: {
     container: {
       center: true,
@@ -20,6 +21,12 @@ module.exports = {
       screens: {
         "2xl": "1400px",
       },
+    },
+    fontFamily: {
+      'display': ['Edu SA Beginner', ...defaultTheme.fontFamily.sans],
+      'body': ['Caveat', ...defaultTheme.fontFamily.sans],
+      'hand': ['Nothing You Could Do'],
+      'hand-alt': ['Shadows Into Light'],
     },
     extend: {
       colors: {

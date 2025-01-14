@@ -12,10 +12,10 @@ import { GithubIcon } from 'lucide-vue-next'
 </script>
 
 <template>
-  <div class="container w-full h-16 grid grid-cols-3 grid-rows-1 px-2 py-2 place-items-center">
+  <div class="container w-full h-16 grid grid-cols-3 grid-rows-1 px-2 py-2 my-4 place-items-center">
     <div class="place-self-start flex flex-row space-x-4 justify-center items-center">
       <img alt="Logo" class="logo inline" src="@/assets/logo.svg" width="48" height="48" />
-      <span class="text-xl font-semibold tracking-tight">Ink'd Insults</span>
+      <span class="text-2xl font-semibold tracking-tight font-display">Ink'd Insults</span>
     </div>
 
     <NavigationMenu class="place-self-center">
