@@ -2,10 +2,7 @@
 
 Love your handwriting? Or hate it? Check out what AI thinks about your handwriting!
 
-<div style="display: flex; width: 800px">
-    <img src="./images/landing_dark.png" alt="Ink'd Insults Dark Theme" style="width: 50%" />
-    <img src="./images/landing_light.png" alt="Ink'd Insults Light Theme" style="width: 50%" />
-</div>
+<img src="./images/landing_mixed.png" alt="Ink'd Insults Landing Page in both themes" style="width: 100%" />
 
 ## Project Setup
 
