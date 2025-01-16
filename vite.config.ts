@@ -8,8 +8,15 @@ import tailwind from 'tailwindcss'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/inkd-insults/',
   plugins: [
-    vue(),
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: tag => ["Label"].includes(tag)
+        }
+      }
+    }),
     vueDevTools(),
   ],
   resolve: {
