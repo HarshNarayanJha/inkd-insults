@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button'
 import { Icon } from '@iconify/vue'
+
+const scrollToHandwriting = () => {
+  document.getElementById('handwriting-section')?.scrollIntoView({ behavior: 'smooth' })
+}
+
+const setupExample = () => {
+  scrollToHandwriting()
+}
 </script>
 
 <template>
@@ -21,10 +29,10 @@ import { Icon } from '@iconify/vue'
       </div>
       <div
         class="my-12 md:my-16 px-4 py-2 flex flex-col md:flex-row gap-4 justify-between font-display">
-        <Button variant="default" size="lg" class="text-xl font-bold">
+        <Button variant="default" size="lg" class="text-xl font-bold" @click="scrollToHandwriting">
           Upload Your Handwriting
         </Button>
-        <Button variant="outline" size="lg" class="text-xl font-light">
+        <Button variant="outline" size="lg" class="text-xl font-light" @click="setupExample">
           Try out an Example!
         </Button>
       </div>

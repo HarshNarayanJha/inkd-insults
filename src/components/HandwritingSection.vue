@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
 
 import ImageContainer from './ImageContainer.vue'
@@ -10,17 +10,12 @@ const image = ref<File | null>(null)
 const updateImage = (newImage: File) => {
   image.value = newImage
 }
-
-watch(
-  () => image.value,
-  newValue => {
-    console.log('Current image updated:', newValue)
-  }
-)
 </script>
 
 <template>
-  <div class="container min-h-svh flex flex-col space-y-8 justify-start items-center px-4 py-8">
+  <div
+    id="handwriting-section"
+    class="container min-h-svh flex flex-col space-y-8 justify-start items-center px-4 py-8">
     <h2 class="text-4xl md:text-6xl font-medium font-body tracking-wide text-center">
       Wanna try it out?
     </h2>

@@ -50,7 +50,7 @@ onUnmounted(() => {
     <img
       :src="previewImage"
       alt="User Handwriting"
-      class="my-4 m-auto w-full max-w-[500px] aspect-square object-cover border-2 rounded-xl shadow-lg transition-all duration-300 hover:brightness-75"
+      class="my-4 m-auto w-full max-w-[500px] aspect-square object-cover border-2 rounded-xl transition-all duration-300 hover:brightness-75"
       ref="image" />
     <div class="grid w-full max-w-sm items-center justify-center gap-1.5 m-auto mt-8">
       <Label for="image">Choose the image of you handwriting</Label>
