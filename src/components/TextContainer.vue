@@ -40,6 +40,13 @@ const generateResponse = async () => {
 
   isLoading.value = true
   response.value = ''
+  lscore.value = -1.0
+  dscore.value = -1.0
+  nscore.value = -1.0
+  ptraits.value = []
+  tips.value = []
+  uchars.value = []
+  text.value = ''
 
   try {
     const data = await generateRoastFromImage(image, taste.value)
