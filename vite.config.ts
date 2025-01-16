@@ -8,7 +8,7 @@ import tailwind from 'tailwindcss'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/inkd-insults/',
+  base: process.env.NODE_ENV === 'production' ? '/inkd-insults/' : '/',
   plugins: [
     vue({
       template: {

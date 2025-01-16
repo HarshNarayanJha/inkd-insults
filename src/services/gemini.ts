@@ -1,48 +1,115 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY
 
+// const OUTPUT_PROMPT = `
+
+// Now, the format for your response must be in JSON, NOT MAKRDOWN, ONLY plain text. You can use emojis, but only 2 or 3 atmost.
+// The JSON Schema is
+// {
+//   "message": <Your view on the handwriting as asked above>,
+//   "legibility_score": <legibility between 0.0 and 1.0>,
+//   "design_score": <design rating between 0.0 and 1.0>,
+//   "neatness_score": <neatness score between 0.0 and 1.0>,
+//   "personality_traits": [<array of 2-3 personality traits inferred from handwriting>],
+//   "improvement_tips": [<array of 1-2 specific tips to improve the handwriting>],
+//   "unique_characteristics": [<array of 1-2 unique/distinctive features of the handwriting>],
+//   "text": <transcript of the text in the image>
+// }
+// `
+
+const schema = {
+  description: "Handwriting Info",
+  type: SchemaType.OBJECT,
+  properties: {
+    message: {
+      type: SchemaType.STRING,
+      description: "Your view on the handwriting in the image as asked above, between 100-150 words.",
+      nullable: false,
+    },
+    legibility_score: {
+      type: SchemaType.NUMBER,
+      description: "Legibility score between 0.0 and 1.0",
+      nullable: false
+    },
+    design_score: {
+      type: SchemaType.NUMBER,
+      description: "Design score between 0.0 and 1.0",
+      nullable: false
+    },
+    neatness_score: {
+      type: SchemaType.NUMBER,
+      description: "Neatness score between 0.0 and 1.0",
+      nullable: false
+    },
+    personality_traits: {
+      type: SchemaType.ARRAY,
+      description: "Array of 2-3 personality traits inferred from handwriting",
+      items: {
+        type: SchemaType.STRING
+      },
+      nullable: false
+    },
+    improvement_tips: {
+      type: SchemaType.ARRAY,
+      description: "Array of 1-2 specific tips to improve the handwriting",
+      items: {
+        type: SchemaType.STRING
+      },
+      nullable: false
+    },
+    unique_characteristics: {
+      type: SchemaType.ARRAY,
+      description: "Array of 1-2 unique/distinctive features of the handwriting",
+      items: {
+        type: SchemaType.STRING
+      },
+      nullable: false
+    },
+    text: {
+      type: SchemaType.STRING,
+      description: "Transcript of the text in the image",
+      nullable: false
+    }
+  },
+  required: ["message", "legibility_score", "design_score", "neatness_score", "personality_traits", "improvement_tips", "unique_characteristics", "text"]
+}
+
 const PROMPTS = {
-  'funny': `You are a playful handwriting critic with a sense of humor.
-  Look at this handwriting sample and create a gentle roast that works whether the writing is neat or messy.
-  If it's too perfect, tease them about being a perfectionist or trying too hard.
-  If it's messy, joke about their artistic chaos or free spirit nature.
-  Comment on aspects like letter spacing, alignment, consistency, and overall style.
-  Make lighthearted observations that poke fun while still being encouraging.
-  The person should be able to laugh along with your comments.
-  Keep the response simple and with words easy to understand, with a few complicated words sometimes for fun and between 100-150 words.
-  Avoid any mean-spirited criticism - the goal is to entertain, not to hurt feelings.`,
+  'funny': `You are a handwritings expert, as you have seen numerous handwritings in your life.
+  You are provided with the image of someone's handwriting, and you have to write something funny about it,
+  the style of handwriting, it's quirks and features etc. Try to make a joke on each aspect, and keep it funny.
+  Be light-hearted, such that the reader enjoys the reading. Keep it somewhere around 100-150 words.
+  The language must be simple and easy to understand, and the jokes must be common. Try not to hurt anyone's feelings.`,
 
-  'playful': `You are a mischievous handwriting critic who loves wordplay and silly jokes.
-  Create a playful analysis of this handwriting that includes puns and clever observations.
-  Focus on making whimsical comparisons and imaginative metaphors about their writing style.
-  Keep things light and fun, mixing in playful teasing with genuine appreciation.
-  Comment on unique characteristics while maintaining a cheerful, games tone.
-  Use creative language and fun analogies that will make them smile.
-  Keep the response between 100-150 words with accessible language and occasional silly words.
-  The goal is pure fun and delight - avoid anything that could be taken negatively.`,
+  'playful': `You are a handwritings expert, as you have seen numerous handwritings in your life.
+  You are provided with the image of someone's handwriting, and you have to write something playful about it,
+  the style of handwriting, it's quirks and features etc. Try to make a joke on each aspect, and keep it playful.
+  Be light-hearted, such that the reader enjoys the reading and admire their handwriting. Keep it somewhere around 100-150 words.
+  The language must be simple and easy to understand, and the jokes must be common. Try not to hurt anyone's feelings.`,
 
-  'brutal': `You are a harsh but hilarious handwriting critic who pulls no punches.
-  Deliver an over-the-top roast of this handwriting sample that's both scathing and entertaining.
-  Exaggerate flaws to comedic effect while maintaining an obviously performative tone.
-  Make outrageous comparisons and use creative hyperbole.
-  Focus on specific details but frame criticism in absurd ways that can't be taken seriously.
-  Keep the response between 100-150 words with colorful language and memorable insults.
-  While brutal, ensure the tone remains clearly comedic rather than cruel.
-  The goal is to shock and amuse - like a comedy roast.`,
+  'brutal': `You are a handwritings expert, as you have seen numerous handwritings in your life.
+  You are provided with the image of someone's handwriting, and you have to write something brutal and sharp about it,
+  the style of handwriting, it's quirks and features etc. Try to make a joke on each aspect, and make it comedic and critisize the handwriting.
+  Be brutal but comedic, such that the reader enjoys the reading and feels bad too at the same time. Keep it somewhere around 100-150 words.
+  The language must be simple and easy to understand, and the jokes must be common. Try not to hurt anyone's feelings too much.`,
 
-  'sarcastic': `You are a witty handwriting critic specializing in deadpan sarcasm.
-  Analyze this handwriting with heavy irony and dry humor.
-  Use subtle mockery and backhanded compliments to create humor.
-  Make seemingly innocent observations with clearly satirical undertones.
-  Comment on specific elements while maintaining an air of false politeness.
-  Keep responses between 100-150 words with clever wordplay and sharp wit.
-  Mix obviously insincere praise with gentle ribbing.
-  The goal is sophisticated humor through artful sarcasm - never mean-spirited.`
+  'sarcastic': `You are a handwritings expert, as you have seen numerous handwritings in your life.
+  You are provided with the image of someone's handwriting, and you have to write something sarcastic and heavy about it,
+  the style of handwriting, it's quirks and features etc. Try to make a joke on every good or bad aspect,
+  and make it sarcastically comedic and heavily critisize the handwriting.
+  Be brutal but comedic, such that the reader enjoys the reading and feels bad too at the same time. Keep it somewhere around 100-150 words.
+  The language must be simple and easy to understand, and the jokes must be common. Try not to hurt anyone's feelings too much.`
 }
 
 const genAI = new GoogleGenerativeAI(API_KEY)
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({
+  model: "gemini-1.5-flash",
+  generationConfig: {
+    responseMimeType: "application/json",
+    responseSchema: schema,
+  }
+});
 
 async function getImageBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -58,7 +125,7 @@ async function getImageBase64(file: File): Promise<string> {
   })
 }
 
-async function* generateRoastFromHandwriting(image: File, taste: string) {
+async function generateRoastFromHandwriting(image: File, taste: string) {
   try {
 
     const base64 = await getImageBase64(image)
@@ -70,13 +137,8 @@ async function* generateRoastFromHandwriting(image: File, taste: string) {
     }
 
     const result = await model.generateContent([imageData, PROMPTS[taste as keyof typeof PROMPTS]])
-
-    const text = result.response.text();
-
-    for (const char of text) {
-      yield char
-      await new Promise(resolve => setTimeout(resolve, 10))
-    }
+    const data = JSON.parse(result.response.text());
+    return data
 
   } catch (error) {
     console.log('Error generating response:', error)
